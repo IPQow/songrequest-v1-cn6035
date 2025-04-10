@@ -1,0 +1,267 @@
+@font-face {
+    font-family: 'MetropolisRegular';
+    src: url(https://cdn.jsdelivr.net/fontsource/fonts/metropolis@latest/latin-400-normal.woff2) format('woff2'), url(https://cdn.jsdelivr.net/fontsource/fonts/metropolis@latest/latin-400-normal.woff) format('woff'), url(https://cdn.jsdelivr.net/fontsource/fonts/metropolis@latest/latin-400-normal.ttf) format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MetropolisBold';
+    src: url(https://cdn.jsdelivr.net/fontsource/fonts/metropolis@latest/latin-700-normal.woff2) format('woff2'), url(https://cdn.jsdelivr.net/fontsource/fonts/metropolis@latest/latin-700-normal.woff) format('woff'), url(https://cdn.jsdelivr.net/fontsource/fonts/metropolis@latest/latin-700-normal.ttf) format('truetype');
+  }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+}
+
+#notifications {
+    position: fixed;
+    right: 10px;
+    bottom: 0px;
+    width: 300px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.notification {
+    background: #1d2328;
+    border-radius: 19px;
+    padding: 4px;
+    margin-bottom: 8px;
+    color: white;
+    animation: slideIn 0.5s ease-out;
+    display: flex;
+    gap: 8px;
+    border: 3px solid transparent;
+    width: 260px;
+    transition: all 0.5s ease-out;
+}
+
+.notification.removing {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.notification.fade-out {
+    opacity: 0;
+}
+
+.notification.pending {
+    border-color: #ff9800;
+}
+
+.notification.approved {
+    border-color: #4CAF50;
+}
+
+.notification.denied {
+    border-color: #f44336;
+}
+
+.notification.played {
+    border-color: #9c27b0;
+}
+
+.notification.queue {
+    border-color: #ffb8e5;
+    width: 400px;
+}
+
+.album-art {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+}
+
+.notification-content {
+    flex: 1;
+    margin-left: -1px;
+    max-width: 270px;
+}
+
+.song-title {
+    font-weight: bold;
+    margin: 0px;
+    font-size: 16px;
+    font-family: 'MetropolisBold';
+    margin-top: 1px;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist {
+    margin: 0px 0;
+    font-size: 13px;
+    opacity: 0.8;
+    font-family: 'MetropolisRegular';
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.requester {
+    font-size: 11px;
+    opacity: 0.7;
+    margin: 0px;
+    margin-top: 2px;
+    font-family: 'MetropolisRegular';
+}
+
+.status {
+    font-size: 11px;
+    padding: 2.5px 6px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 4px;
+    text-transform: uppercase;
+    height: 12px;
+    font-family: 'MetropolisBold';
+}
+
+.status.pending { 
+    background: #ff9800;
+}
+
+.status.approved { 
+    background: #4CAF50;
+}
+
+.status.denied { 
+    background: #f44336;
+}
+
+.status.played {
+    background: #9c27b0;
+}
+
+.queue-content {
+    padding: 8px;
+}
+
+.queue-header {
+    font-family: 'MetropolisBold';
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    color: #ffb8e5;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.queue-number {
+    font-family: 'MetropolisBold';
+    color: #ffb8e5;
+    min-width: 20px;
+    font-size: 20px;
+}
+
+.queue-info {
+    flex: 1;
+}
+
+.queue-info .song-title {
+    font-size: 14px;
+    margin: 0;
+}
+
+.queue-info .artist {
+    font-size: 12px;
+    margin: 0;
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateX(100%); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.skip-vote-notification {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: #1d2328;
+    border-radius: 19px;
+    padding: 12px;
+    color: white;
+    border: 3px solid #ff4081;
+    width: 300px;
+    animation: slideIn 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+
+.skip-vote-notification.removing {
+    opacity: 0;
+}
+
+.skip-vote-header {
+    font-family: 'MetropolisBold';
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    color: #ff4081;
+}
+
+.skip-vote-progress {
+    background: #2d3338;
+    height: 12px;
+    border-radius: 2px;
+    margin-top: 8px;
+}
+
+.skip-vote-bar {
+    background: #ff4081;
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease-out;
+}
+
+.skip-vote-bar.skipped {
+    background: #4CAF50;
+}
+
+.skip-vote-counts {
+    font-family: 'MetropolisRegular';
+    font-size: 14px;
+    margin-top: 7px;
+    color: #ffffff;
+    margin-bottom: 0px;
+}
+
+.skip-vote-notification.skipped {
+    border-color: #4CAF50;
+}
+
+.skip-vote-header.skipped {
+    color: #4CAF50;
+}
+
+.remaining-count {
+    color: #ffb8e5;
+    font-family: 'MetropolisBold';
+    font-size: 16px;
+    margin-top: 6px;
+    opacity: 1;
+    margin-bottom: 0px;
+}
