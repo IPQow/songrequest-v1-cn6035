@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="request-info">
                     <h3 class="song-title">${request.title}</h3>
                     <p class="artist">${request.artist}</p>
-                    <p class="requester">Requested by: <a href="https://twitch.tv/popout/hollsbeauti/viewercard/${request.requester}?popout=" target="_blank" class="requester-link">${request.requester}</a></p>
+                    <p class="requester">Requested by: <a href="https://twitch.tv/popout/${twitch_channel}/viewercard/${request.requester}?popout=" target="_blank" class="requester-link">${request.requester}</a></p>
                     <div class="status-container">
                         <div class="status-wrapper">
                             <span class="status ${displayStatus}" 
