@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Requests Dashboard</title>
+    <link rel="stylesheet" href="/src/css/style.css">
+</head>
+<body>
+    <div id="auth-overlay">
+        <div class="login-form" id="login-form">
+            <div class="login-header">
+                <img class="login-logo"
+                    src="https://cdn.ipqow.com/i/hotlink-ok/lotuslabs/assets/llbrand/svg/LL_1%20Lotus.svg" alt="Lotus">
+                <h2>SongRequest</h2>
+            </div>
+            <div class="wallet-connect-section">
+                <button id="auth-wallet-btn" class="wallet-button">Connect Wallet</button>
+                <div id="auth-wallet-status" class="wallet-status"></div>
+            </div>
+            <div id="username-section" style="display: none;">
+                <label for="username">Choose a Username</label>
+                <input type="text" id="username" required>
+                <button type="button" id="start-btn" class="submit-btn">Start Using App</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-container">
+        <header>
+            <div class="title-container">
+                <img class="logo" src="https://cdn.ipqow.com/i/hotlink-ok/lotuslabs/assets/llbrand/svg/LL_1%20Lotus.svg"
+                    alt="Lotus">
+                <h1>Song Requests Queue</h1>
+                <span id="queue-size" class="queue-size">Queue: 0</span>
+            </div>
+            <div class="status-filters">
+                <div class="filters">
+                    <button class="filter-btn active" data-status="all">All Songs</button>
+                    <button class="filter-btn" data-status="queued">In Queue</button>
+                    <button class="filter-btn" data-status="played">Played</button>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <div class="content-container">
+            <form id="songRequestForm" class="request-form" style="display: none;">
+                <h2>Request a Song</h2>
+                <div class="form-group">
+                    <label for="songTitle">Song Title</label>
+                    <input type="text" id="songTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="artistName">Artist Name</label>
+                    <input type="text" id="artistName" required>
+                </div>
+                <button type="submit" class="submit-btn">Submit Request</button>
+            </form>
+
+            <div id="queueContainer" class="queue-container">
+                <!-- Song requests will be dynamically added here -->
+            </div>
+        </div>
+    </main>
+
+    <div class="wallet-section">
+        <button id="connectWallet" class="wallet-button">Connect Wallet</button>
+        <div id="walletAddress" class="wallet-status"></div>
+        <button id="disconnectWallet" class="wallet-button" style="display: none;">Disconnect Wallet</button>
+    </div>
+
+    <script type="module" src="/src/js/main.js"></script>
+</body>
+</html> 

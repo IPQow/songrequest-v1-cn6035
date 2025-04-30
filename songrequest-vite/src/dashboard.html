@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Requests Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="icon" href="https://cdn.ipqow.com/i/hotlink-ok/lotuslabs/assets/llbrand/svg/LL_1%20Lotus.svg"
+        type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/algosdk@2.7.0/dist/browser/algosdk.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@perawallet/connect@1.3.1/dist/index.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/algorand-config.js"></script>
+</head>
+<body>
+    <div id="auth-overlay">
+        <div class="login-form" id="login-form">
+            <div class="login-header">
+                <img class="login-logo"
+                    src="https://cdn.ipqow.com/i/hotlink-ok/lotuslabs/assets/llbrand/svg/LL_1%20Lotus.svg" alt="Lotus">
+                <h2>SongRequest</h2>
+            </div>
+            <div class="wallet-connect-section">
+                <button id="auth-wallet-btn" class="wallet-button">Connect Wallet</button>
+                <div id="auth-wallet-status" class="wallet-status"></div>
+            </div>
+            <div id="username-section" style="display: none;">
+                <label for="username">Choose a Username</label>
+                <input type="text" id="username" required>
+                <button type="button" id="start-btn" class="submit-btn">Start Using App</button>
+            </div>
+        </div>
+    </div>
+    <div class="header-container">
+        <header>
+            <div class="title-container">
+                <img class="logo" src="https://cdn.ipqow.com/i/hotlink-ok/lotuslabs/assets/llbrand/svg/LL_1%20Lotus.svg"
+                    alt="Lotus">
+                <h1>Song Requests Queue</h1>
+                <span id="queue-size" class="queue-size">Queue: 0</span>
+            </div>
+            <div class="status-filters">
+                <div class="filters">
+                    <button class="filter-btn active" data-status="all">All Songs</button>
+                    <button class="filter-btn" data-status="queued">In Queue</button>
+                    <button class="filter-btn" data-status="played">Played</button>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <div id="requests-container" class="requests-grid"></div>
+    </main>
+
+    <div class="wallet-section">
+        <button id="connect-wallet" class="wallet-button">Connect Wallet</button>
+        <div id="wallet-status" class="wallet-status"></div>
+    </div>
+
+    <script>
+        window.supabaseClient = supabase.createClient(
+            'https://byejgazxeedvcuoccdmz.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5ZWpnYXp4ZWVkdmN1b2NjZG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5MTU4NjAsImV4cCI6MjA2MTQ5MTg2MH0.0WonEKLRHAyd2_jRAaS8uisGXwTsDnhyRMazg-926rE',
+            {
+                realtime: {
+                    params: {
+                        eventsPerSecond: 2
+                    }
+                },
+                global: {
+                    headers: {
+                        'x-application-name': 'song-request-app'
+                    }
+                }
+            }
+        );
+    </script>
+    <script src="dashboard.js"></script>
+    <script src="js/wallet.js"></script>
+</body>
+</html>
