@@ -4,6 +4,7 @@ import SongRequestForm from '../components/SongRequestForm'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
+import { formatTimeSince } from '../utils/dateUtils'
 
 const Home = () => {
   const [songs, setSongs] = useState([])
@@ -121,6 +122,8 @@ const Home = () => {
                   <span className={`status-tag ${getStatusClass(song.status)}`}>
                     {song.status || 'Pending'}
                   </span>
+                  <span style={{ margin: '0 0.5rem' }}>•</span>
+                  <span className="time-ago">{formatTimeSince(song.created_at)}</span>
                 </div>
               </div>
             </div>
