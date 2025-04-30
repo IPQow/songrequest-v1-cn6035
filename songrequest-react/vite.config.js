@@ -13,5 +13,17 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  define: {
+    'global': {},
+    'process.env': {}
+  },
+  resolve: {
+    alias: {
+      process: "process/browser",
+      stream: "stream-browserify",
+      zlib: "browserify-zlib",
+      util: "util"
+    }
   }
 })
