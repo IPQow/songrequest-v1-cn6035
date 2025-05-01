@@ -65,14 +65,51 @@ const Home = () => {
       return;
     }
 
-    if (balance < SONG_REQUEST_COST / 1_000_000) {
-      console.log('Insufficient balance');
-      toast.error('Insufficient balance');
-      return;
-    }
-
     try {
       setProcessingPayment(song.id);
+
+      // Immediately queue the song in Spotify
+      try {
+        // Call the queue API endpoint to add the song to Spotify queue
+        const queueResponse = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/queue`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ uri: song.spotify_uri }),
+        });
+
+        if (!queueResponse.ok) {
+          const queueError = await queueResponse.json();
+          console.error('Failed to add song to queue:', queueError);
+          toast.error('Song added to queue but encountered an error');
+        } else {
+          // Update song status in database for the queued song
+          const { error: queueUpdateError } = await supabase
+            .from('requests')
+            .update({ 
+              status: 'queued',
+              action_by: 'Auto-Queue System'
+            })
+            .eq('id', song.id);
+
+          if (queueUpdateError) {
+            console.error('Error updating song status:', queueUpdateError);
+          }
+          
+          toast.success('Song added to queue successfully!');
+        }
+      } catch (queueError) {
+        console.error('Error adding to Spotify queue:', queueError);
+        toast.error('Failed to add song to queue');
+      }
+      
+      // Now attempt payment (after queuing) if user has sufficient balance
+      if (balance < SONG_REQUEST_COST / 1_000_000) {
+        console.log('Insufficient balance');
+        toast.success('Song added to queue!');
+        return;
+      }
       
       // Hardcoded admin wallet address
       const adminWallet = "CXQ3YB74QKIPUC4HZ63KKGTWGVX423LMFYV3INDUX2HFMUJM5T5WL5IAQU";
@@ -107,33 +144,36 @@ const Home = () => {
       console.log('Verified admin wallet decode:', verifyDecode);
 
       console.log('Calling paySongRequest with admin wallet:', cleanAdminWallet);
-      const paymentResult = await paySongRequest(cleanAdminWallet);
       
-      if (!paymentResult.success) {
-        throw new Error('Payment failed');
+      try {
+        const paymentResult = await paySongRequest(cleanAdminWallet);
+        
+        if (paymentResult.success) {
+          // Update payment info in database
+          const { error: updateError } = await supabase
+            .from('requests')
+            .update({ 
+              payment_txn: paymentResult.txId
+            })
+            .eq('id', song.id);
+
+          if (updateError) {
+            console.error('Error updating payment transaction:', updateError);
+          }
+          
+          toast.success('Payment processed successfully!');
+        }
+      } catch (paymentError) {
+        console.error('Payment error:', paymentError);
+        toast.success('Song added to queue!');
       }
 
-      // Update song status in database
-      const { error: updateError } = await supabase
-        .from('requests')
-        .update({ 
-          status: 'approved',
-          action_by: accountAddress.slice(0, 4) + '...' + accountAddress.slice(-4),
-          payment_txn: paymentResult.txId
-        })
-        .eq('id', song.id)
-
-      if (updateError) {
-        throw updateError
-      }
-
-      toast.success('Song successfully purchased and added to queue!')
       await fetchSongs() // Refresh the list
     } catch (error) {
-      console.error('Error buying song:', error)
-      toast.error(error.message || 'Failed to buy song')
+      console.error('Error handling song request:', error);
+      toast.error(error.message || 'Error occurred while processing request');
     } finally {
-      setProcessingPayment(null)
+      setProcessingPayment(null);
     }
   }
 
@@ -254,7 +294,7 @@ const Home = () => {
                     <button
                       className="buy-button"
                       onClick={() => handleBuySong(song)}
-                      disabled={!isConnected || processingPayment === song.id || balance < SONG_REQUEST_COST / 1_000_000}
+                      disabled={!isConnected || processingPayment === song.id}
                     >
                       {processingPayment === song.id ? (
                         <span>Processing...</span>
@@ -264,7 +304,7 @@ const Home = () => {
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 6v6l3 3" />
                           </svg>
-                          Buy for {SONG_REQUEST_COST / 1_000_000} ALGO
+                          Add to queue (0.1 ALGO)
                         </>
                       )}
                     </button>

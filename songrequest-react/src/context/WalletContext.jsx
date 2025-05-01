@@ -106,7 +106,7 @@ export const WalletProvider = ({ children }) => {
       }
       
       try {
-        decodedSender = algosdk.decodeAddress(accountAddress);
+        let decodedSender = algosdk.decodeAddress(accountAddress);
         console.log('Sender address decoded successfully:', decodedSender);
       } catch (error) {
         console.error('Failed to decode sender address:', error);
@@ -114,7 +114,7 @@ export const WalletProvider = ({ children }) => {
       }
 
       try {
-        decodedReceiver = algosdk.decodeAddress(receiverAddress);
+        let decodedReceiver = algosdk.decodeAddress(receiverAddress);
         console.log('Receiver address decoded successfully:', decodedReceiver);
       } catch (error) {
         console.error('Failed to decode receiver address:', error);
