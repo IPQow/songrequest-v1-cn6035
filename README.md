@@ -42,8 +42,8 @@ The original project was a Twitch song request bot that:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/blockchain-beats.git
-   cd blockchain-beats
+   git clone https://github.com/IPQow/songrequest-v1-cn603
+   cd songrequest-v1-cn603
    ```
 
 2. **Install dependencies for the server**
