@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import { WalletProvider } from './context/WalletContext'
 import WalletButton from './components/WalletButton'
+import RequestSongButton from './components/RequestSongButton'
 import './App.css'
 import Home from './pages/Home'
 
@@ -13,7 +14,10 @@ function App() {
       <AuthProvider>
         <WalletProvider>
           <div className="App">
-            <WalletButton />
+            <div className="header-buttons">
+              <RequestSongButton />
+              <WalletButton />
+            </div>
             <Routes>
               <Route path="/" element={<Home />} />
             </Routes>

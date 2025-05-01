@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
+import { Buffer } from "buffer"; window.Buffer = Buffer;
+
 
 // Add Buffer polyfill
 window.Buffer = window.Buffer || require('buffer').Buffer
