@@ -19,7 +19,7 @@ const algod = new algosdk.Algodv2(
 )
 
 // Constants
-const SONG_REQUEST_COST = 0.1 * 1_000_000 // 0.1 Algo in microAlgos
+const SONG_REQUEST_COST = BigInt(0.1 * 1_000_000) // 0.1 Algo in microAlgos
 
 export const useWallet = () => {
   return useContext(WalletContext)
@@ -98,36 +98,69 @@ export const WalletProvider = ({ children }) => {
   const paySongRequest = async (receiverAddress) => {
     try {
       if (!accountAddress) {
-        throw new Error('Wallet not connected')
+        throw new Error('Sender address is null or undefined');
       }
 
-      // Get suggested parameters for the transaction
-      const suggestedParams = await algod.getTransactionParams().do()
+      if (!receiverAddress) {
+        throw new Error('Receiver address is null or undefined');
+      }
+      
+      try {
+        decodedSender = algosdk.decodeAddress(accountAddress);
+        console.log('Sender address decoded successfully:', decodedSender);
+      } catch (error) {
+        console.error('Failed to decode sender address:', error);
+        throw new Error('Invalid sender address format');
+      }
 
-      // Create the transaction object
+      try {
+        decodedReceiver = algosdk.decodeAddress(receiverAddress);
+        console.log('Receiver address decoded successfully:', decodedReceiver);
+      } catch (error) {
+        console.error('Failed to decode receiver address:', error);
+        throw new Error('Invalid receiver address format');
+      }
+
+      const suggestedParams = await algod.getTransactionParams().do();      
+
+      const amount = Number(SONG_REQUEST_COST);
+      let sender = accountAddress;
+      let receiver = receiverAddress;
+      
+      //console.log('Creating transaction with parameters:');
+      //console.log('- Amount:', amount);
+      //console.log('- Sender:', sender);
+      //console.log('- Receiver:', receiver);
+      //console.log('- Fee:', suggestedParams.fee);
+
+      // Create basic payment transaction
       const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-        from: accountAddress,
-        to: receiverAddress,
-        amount: SONG_REQUEST_COST,
-        suggestedParams
-      })
+        suggestedParams: suggestedParams,
+        from: sender,
+        to: receiver,
+        amount: amount,
+        type: 'pay'
+      });
 
-      // Get the transaction signed
-      const signedTxn = await peraWallet.signTransaction([[{ txn }]])
 
-      // Submit the transaction to the network
-      const { txId } = await algod.sendRawTransaction(signedTxn).do()
+      const txnToSign = [{ txn: txn }];
 
-      // Wait for confirmation
-      await algosdk.waitForConfirmation(algod, txId, 4)
 
-      // Refresh balance after successful transaction
-      await fetchBalance()
+      const signedTxn = await peraWallet.signTransaction([txnToSign]);
 
-      return { success: true, txId }
+      const { txId } = await algod.sendRawTransaction(signedTxn).do();
+
+      await algosdk.waitForConfirmation(algod, txId, 4);
+
+      // Refresh balance
+      await fetchBalance();
+
+      return { success: true, txId };
     } catch (error) {
-      console.error('Payment error:', error)
-      throw error
+      console.error('\n=== Transaction Error ===');
+      console.error('Error details:', error);
+      console.error('Error stack:', error.stack);
+      throw error;
     }
   }
 
@@ -138,7 +171,7 @@ export const WalletProvider = ({ children }) => {
     disconnectWallet,
     paySongRequest,
     isConnected: !!accountAddress,
-    SONG_REQUEST_COST
+    SONG_REQUEST_COST: Number(SONG_REQUEST_COST) // Convert to Number for display purposes
   }
 
   return (
