@@ -93,3 +93,108 @@
 .wallet-button.connected:hover {
   background: #45a049;
 }
+
+.network-badge {
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  text-transform: capitalize;
+}
+
+.wallet-list {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: #1a1a1a;
+  color: white;
+}
+
+.wallet-list h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.wallet-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wallet-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.wallet-option:hover {
+  background: #333;
+}
+
+.wallet-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.connected-wallet {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: #1a1a1a;
+  color: white;
+}
+
+.wallet-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.account-info {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.account-info span:last-child {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background: #333;
+  color: white;
+  border: 1px solid #444;
+}
+
+button {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
