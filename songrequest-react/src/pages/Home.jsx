@@ -148,11 +148,24 @@ const Home = () => {
     }
   }
 
+  const getStatusIcon = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'approved':
+        return '✓'
+      case 'denied':
+        return '✗'
+      default:
+        return '⌛'
+    }
+  }
+
   if (loading) {
     return (
       <div className="container">
         <h1 className="page-title">Song Requests</h1>
-        <div>Loading song requests...</div>
+        <div className="loading-container">
+          <div className="loading-text">Loading song requests...</div>
+        </div>
       </div>
     )
   }
@@ -161,17 +174,30 @@ const Home = () => {
     return (
       <div className="container">
         <h1 className="page-title">Song Requests</h1>
-        <div style={{ color: 'red' }}>Error: {error}</div>
+        <div style={{ color: 'var(--error-color)', padding: '2rem', textAlign: 'center' }}>
+          <p>Error: {error}</p>
+          <button onClick={fetchSongs} style={{ marginTop: '1rem' }}>Try Again</button>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="container">
-      <h1 className="page-title">Song Requests</h1>
       {isAuthenticated && <SongRequestForm />}
       {songs.length === 0 ? (
-        <div>No song requests found.</div>
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '3rem 1rem', 
+          color: 'var(--text-secondary)',
+          backgroundColor: 'var(--card-bg)',
+          borderRadius: '12px',
+          border: '1px dashed var(--border-color)',
+          margin: '2rem 0'
+        }}>
+          <p>No song requests found.</p>
+          {isAuthenticated && <p>Be the first to request a song!</p>}
+        </div>
       ) : (
         <div className="song-list">
           {songs.map((song) => (
@@ -184,11 +210,11 @@ const Home = () => {
                     style={{ 
                       width: '100%', 
                       height: '100%', 
-                      backgroundColor: '#333',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#666',
+                      color: 'var(--text-tertiary)',
                       fontSize: '0.75rem',
                       textAlign: 'center',
                       padding: '0.5rem'
@@ -199,17 +225,30 @@ const Home = () => {
                 )}
               </div>
               <div className="song-info">
-                <h2 className="song-title">{song.title}</h2>
-                <p className="song-artist">{song.artist}</p>
-                <div className="song-meta">
-                  <span>Requested by: {song.requester}</span>
-                  <span style={{ margin: '0 0.5rem' }}>•</span>
-                  <span className={`status-tag ${getStatusClass(song.status)}`}>
-                    {song.status || 'Pending'}
-                  </span>
-                  <span style={{ margin: '0 0.5rem' }}>•</span>
-                  <span className="time-ago">{formatTimeSince(song.created_at)}</span>
+                <div>
+                  <h2 className="song-title">{song.title}</h2>
+                  <p className="song-artist">{song.artist}</p>
                 </div>
+                
+                <div className="song-meta">
+                  <span>
+                    <strong style={{ color: 'var(--text-secondary)' }}>Requested by:</strong> {song.requester}
+                  </span>
+                  <span className="time-ago">{formatTimeSince(song.created_at)}</span>
+                  
+                  {song.payment_txn && (
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                      Processed by: {song.action_by || 'Unknown'}
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              <div className="card-actions">
+                <span className={`status-tag ${getStatusClass(song.status)}`}>
+                  {getStatusIcon(song.status)} {song.status || 'Pending'}
+                </span>
+                
                 {song.status === 'pending' && (
                   <div className="song-actions">
                     <button
@@ -218,9 +257,15 @@ const Home = () => {
                       disabled={!isConnected || processingPayment === song.id || balance < SONG_REQUEST_COST / 1_000_000}
                     >
                       {processingPayment === song.id ? (
-                        'Processing...'
+                        <span>Processing...</span>
                       ) : (
-                        <>Buy for {SONG_REQUEST_COST / 1_000_000} ALGO</>
+                        <>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l3 3" />
+                          </svg>
+                          Buy for {SONG_REQUEST_COST / 1_000_000} ALGO
+                        </>
                       )}
                     </button>
                   </div>
