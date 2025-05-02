@@ -12,7 +12,7 @@ const NodeCache = require('node-cache');
 const apiCache = new NodeCache({ stdTTL: 300 });
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 // Cache middleware
 const cacheMiddleware = (duration) => {
@@ -41,7 +41,7 @@ const cacheMiddleware = (duration) => {
 // Middleware
 app.use(compression());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:5173'],
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

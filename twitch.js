@@ -75,11 +75,11 @@ const handleChannelPointRedemption = async (channel, tags, message) => {
         return false;
     }
 
-    const isLive = await checkStreamStatus(channel);
+    /*const isLive = await checkStreamStatus(channel);
     if (!isLive) {
         client.say(channel, `@${tags.username}, song requests are only available when the stream is live!`);
         return true;
-    }
+    }*/
 
     const query = message.trim();
     
@@ -334,11 +334,11 @@ const handleSkipVote = async (channel, tags) => {
         return;
     }
 
-    const isLive = await checkStreamStatus(channel);
-    if (!isLive) {
+    //const isLive = await checkStreamStatus(channel);
+    /*if (!isLive) {
         client.say(channel, `@${tags.username}, skip voting is only available when the stream is live!`);
         return;
-    }
+    }*/
 
     if (!skipVoteActive) {
         // Start new vote
